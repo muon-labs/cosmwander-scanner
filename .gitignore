@@ -1,0 +1,25 @@
+### Node ###
+# Logs
+*.log
+
+# Coverage directory
+coverage
+*.lcov
+
+# Dependency directories
+node_modules/
+
+# Optional eslint cache
+.eslintcache
+
+# Environment variables
+.env*
+
+# VSCode folder 
+.vscode
+
+# Build folder
+dist
+
+# Docker Data
+.docker

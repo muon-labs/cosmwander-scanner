@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": false,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es2019",
+        "moduleResolution": "node",
+        "declaration": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "strict": true,
+        "resolveJsonModule": true,
+        "typeRoots": [
+            "node_modules/@types",
+            "@types"
+        ],
+        "pretty": true,
+        "baseUrl": ".",
+        "paths": {
+            "~/*": [
+                "src/*"
+            ],
+        }
+    },
+    "include": [
+        "src/**/*",
+        "@types"
+    ]
+}
