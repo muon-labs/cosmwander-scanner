@@ -8,6 +8,7 @@ declare global {
     interface ProcessEnv {
       PORT: string;
       LOG_LEVEL: string;
+      DB_URI: string;
     }
   }
   namespace Express {

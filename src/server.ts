@@ -15,6 +15,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
 server.listen(PORT, async () => {
+  await loaders.mongodb();
   await loaders.controllers(server);
   await loaders.middlewares(server);
   console.info(`Server running and listening in port: ${PORT}`);
