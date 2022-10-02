@@ -18,7 +18,8 @@ class CodeService {
     async fetchCodeDetails(chainId: string, codeId: number): Promise<void> {
         const client = await CosmWasmClient.connect(chainId);
         const { id: code_id, creator, checksum } = await client.getCodeDetails(codeId);
-        await CodeModel.create({ code_id, chain_id: chainId, creator, checksum });
+        const contracts = await client.getContractsByCodeId(codeId);
+        await CodeModel.create({ code_id, chain_id: chainId, creator, checksum, contracts });
     }
 
     async verifyGithubRepo(chainId:string, codeId: string, github_url: string): Promise<boolean> {
