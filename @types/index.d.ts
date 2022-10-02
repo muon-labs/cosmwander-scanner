@@ -9,6 +9,7 @@ declare global {
       PORT: string;
       LOG_LEVEL: string;
       DB_URI: string;
+      MNEMONIC: string;
     }
   }
   namespace Express {
