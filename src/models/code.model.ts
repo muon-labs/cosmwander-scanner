@@ -10,7 +10,10 @@ export interface Code {
     execute?: Record<string, string>;
     query?: Record<string, string>;
   };
-  repository?: string;
+  code_ref?: {
+    repo_url: string;
+    commit_hash: string;
+  };
   verified?: boolean;
   last_verified?: Date;
 }
@@ -39,7 +42,10 @@ const CodeSchema = new Schema(
       execute: {},
       query: {}
     },
-    repository: String,
+    code_ref: {
+      repo_url: String,
+      commit_hash: String
+    },
     verified: Boolean,
     last_verified: Date
   },

@@ -1,16 +1,21 @@
 import ChainService, { Chain } from './chain.service';
 import { CosmWasmClient as CWClient, SigningCosmWasmClient, CodeDetails, Contract } from '@cosmjs/cosmwasm-stargate';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
+import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import { GasPrice } from '@cosmjs/stargate';
 import { OfflineSigner } from '@cosmjs/proto-signing';
 import { HttpError } from '~/utils/http-error';
+import GithubService from './github.service';
+import BuilderService from './builder.service';
+import { tmpdir } from 'os';
 
 class CosmWasmClient {
   chainService: ChainService;
+  githubService: GithubService;
   chain: Chain;
   client: CWClient | SigningCosmWasmClient;
   constructor(client: CWClient, chainService: ChainService, chainId: string) {
     this.chainService = chainService;
+    this.githubService = new GithubService();
     this.chain = this.chainService.getChainById(chainId);
     this.client = client;
   }
@@ -33,13 +38,22 @@ class CosmWasmClient {
     return new CosmWasmClient(client, chainService, chainId);
   }
 
+  static async getWallet(bech32Prefix: string): Promise<DirectSecp256k1HdWallet> {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(process.env.MNEMONIC, {
+      prefix: bech32Prefix
+    });
+    return wallet;
+  }
 
-static async getWallet (bech32Prefix: string): Promise<DirectSecp256k1HdWallet> {
-  const wallet = await DirectSecp256k1HdWallet.fromMnemonic(process.env.MNEMONIC, { 
-    prefix: bech32Prefix
-  })
-  return wallet
-}
+  static buildSchemaFromRepo(code_ref: { repoUrl: string; commitHash: string; repoPath: string }) {
+    const cwd = tmpdir();
+    GithubService.verifyRepo(code_ref.repoUrl);
+    GithubService.cloneRepo(cwd, code_ref);
+    BuilderService.buildRepo(cwd, code_ref.repoPath);
+    const schema = BuilderService.getSchema(cwd, code_ref.repoPath);
+    GithubService.deleteRepo(cwd);
+    return schema;
+  }
 
   async getContractsByCodeId(codeId: number): Promise<readonly string[]> {
     return await this.client.getContracts(codeId);
