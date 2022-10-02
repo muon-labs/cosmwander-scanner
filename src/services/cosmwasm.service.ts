@@ -13,7 +13,8 @@ class CosmWasmClient {
 
     static async connect(chainId: string): Promise<CosmWasmClient> {
         const chainService = new ChainService();
-        const client = await CWClient.connect(chainService.getBestRPC(chainId));
+        const rpc = chainService.getBestRPC(chainId);
+        const client = await CWClient.connect(rpc);
         return new CosmWasmClient(client, chainService, chainId);
     }
 

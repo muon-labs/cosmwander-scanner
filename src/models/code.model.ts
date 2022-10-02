@@ -5,7 +5,7 @@ export interface Code {
     creator: string;
     checksum: string;
     contracts: string[];
-    schema?: string;
+    definition?: string;
     repository?: string;
     verified?: boolean;
     last_verified?: Date;
@@ -30,7 +30,7 @@ const CodeSchema = new Schema(
         type: String,
     },
     contracts: [String],
-    schema: String,
+    definition: String,
     repository: String,
     verified: Boolean,
     last_verified: Date,
@@ -40,6 +40,9 @@ const CodeSchema = new Schema(
     versionKey: false,
     toJSON: {
       virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.id;
+      }
     }
   }
 );
