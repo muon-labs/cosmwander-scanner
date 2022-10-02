@@ -19,19 +19,20 @@ class CodeService {
     if (definition?.execute) return definition;
     if (!contracts.length) return {};
 
-    const schemaDefinition = await this.createPartialSchema(chainId, contracts[0]);
+    const schemaDefinition = await this.createPartialSchema(chainId, codeId, contracts[0]);
     await codeDetails.updateOne({ definition: schemaDefinition });
     return schemaDefinition;
   }
 
-  async createPartialSchema(chainId: string, address: string): Promise<Record<string, unknown>> {
+  async createPartialSchema(chainId: string, codeId: number, address: string): Promise<Record<string, unknown>> {
     const client = await CosmWasmClient.connectWithSigner(chainId);
     const execute = await client.getExecuteSchemaFromAddress(address);
     const query = await client.getQuerySchemaFromAddress(address);
+    const instantiate = await client.getInstantiateSchemaFromCodeId(codeId);
     return {
       execute,
       query,
-      instantiate: {}
+      instantiate
     };
   }
 

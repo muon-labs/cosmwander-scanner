@@ -22,14 +22,17 @@
     "chain-registry": "^1.0.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
+    "cosmjs-types": "^0.5.1",
     "dotenv": "^16.0.3",
     "esbuild-runner": "^2.2.1",
     "express": "^4.18.1",
     "helmet": "^6.0.0",
+    "jsonschema": "^1.4.1",
     "mongoose": "^6.6.3",
     "nodemon": "^2.0.20",
     "pino": "^8.6.1",
     "pino-pretty": "^9.1.0",
+    "to-json-schema": "^0.2.5",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
