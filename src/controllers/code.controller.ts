@@ -4,6 +4,16 @@ import CodeService from '../services/code.service';
 const controller = Router();
 const codeService = new CodeService();
 
+controller.get('/:chainId/pinned', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { chainId } = req.params;
+    const msg = await codeService.getPinnedCode(chainId);
+    res.status(200).json(msg);
+  } catch (error) {
+    next(error);
+  }
+});
+
 controller.get('/:chainId/:codeId/schema', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { codeId, chainId } = req.params;

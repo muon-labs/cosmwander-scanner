@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { ChainModel } from '~/models/chain.model';
 import { HttpError } from '~/utils/http-error';
 import { CodeModel, Code } from '../models';
 import CosmWasmClient from './cosmwasm.service';
@@ -22,6 +23,12 @@ class CodeService {
     const schemaDefinition = await this.createPartialSchema(chainId, codeId, contracts[0]);
     await codeDetails.updateOne({ definition: schemaDefinition });
     return schemaDefinition;
+  }
+
+  async getPinnedCode(chain_id: string): Promise<number[]> {
+    const chainInfo = await ChainModel.findOne({ chain_id });
+    if (!chainInfo) throw new HttpError(404);
+    return chainInfo.pinned_codes;
   }
 
   async createPartialSchema(chainId: string, codeId: number, address: string): Promise<Record<string, unknown>> {
