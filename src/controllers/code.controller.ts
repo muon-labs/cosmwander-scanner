@@ -1,27 +1,52 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import CodeService from '../services/code.service';
+import { NextFunction, Request, Response, Router } from 'express'
+import CodeService from '../services/code.service'
 
-const controller = Router();
-const codeService = new CodeService();
+const controller = Router()
+const codeService = new CodeService()
 
-controller.get('/:chainId/:codeId/schema', async (req: Request, res: Response, next: NextFunction) => {
+controller.get(
+  '/:chainId/:codeId/schema',
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { codeId, chainId } = req.params;
-        const msg = await codeService.getCodeSchema(chainId, parseInt(codeId));
-        res.status(200).send(msg);
-      } catch (error: unknown) {
-        next(error);
-      }
-});
+      const { codeId, chainId } = req.params
+      const msg = await codeService.getCodeSchema(chainId, parseInt(codeId))
+      res.status(200).send(msg)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
-controller.get('/:chainId/:codeId/metadata', async (req: Request, res: Response, next: NextFunction) => {
+controller.get(
+  '/:chainId/:codeId/metadata',
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { codeId, chainId } = req.params;
-        const msg = await codeService.getCodeDetails(chainId, parseInt(codeId));
-        res.status(200).send(msg);
-      } catch (error: unknown) {
-        next(error);
-      }
-});
+      const { codeId, chainId } = req.params
+      const msg = await codeService.getCodeDetails(chainId, parseInt(codeId))
+      res.status(200).send(msg)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
-export default { prefixPath: '/code', middlewares: [], controller };
+controller.post(
+  '/:chainId/:codeId/github_url',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { codeId, chainId } = req.params
+      const { github_url } = req.body
+
+      const isValidRepo = await codeService.verifyGithubRepo(chainId, codeId, github_url)
+      if (!isValidRepo) {
+        return res.status(400).send('Invalid Github Repo')
+      }
+
+      await codeService.buildGithubRepo(github_url)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+export default { prefixPath: '/code', middlewares: [], controller }

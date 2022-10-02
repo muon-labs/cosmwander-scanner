@@ -1,6 +1,9 @@
 import { Document } from "mongoose";
 import { CodeModel, Code } from '../models';
+import ChainService from "./chain.service";
 import CosmWasmClient from "./cosmwasm.service";
+
+const chainService = new ChainService();
 
 class CodeService {
     async getCodeDetails(chainId: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
@@ -27,6 +30,15 @@ class CodeService {
         const code = await this.getCodeDetails(chainId, codeId);
         const codeDefinition = {}
         await code.update({ definition: codeDefinition })
+    }
+
+    async verifyGithubRepo(chainId:string, codeId: string, github_url: string): Promise<boolean> {
+        
+        return true;
+    }
+
+    async buildGithubRepo(chainId:string, codeId: string, github_url: string): Promise<void> {
+        return;
     }
 }
 

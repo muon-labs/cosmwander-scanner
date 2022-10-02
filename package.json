@@ -14,7 +14,9 @@
   "author": "Muonlabs",
   "license": "MIT",
   "dependencies": {
+    "@cosmjs/amino": "^0.29.0",
     "@cosmjs/cosmwasm-stargate": "^0.29.0",
+    "@cosmjs/proto-signing": "^0.29.0",
     "@cosmjs/stargate": "^0.29.0",
     "@cosmjs/tendermint-rpc": "^0.29.0",
     "chain-registry": "^1.0.0",
