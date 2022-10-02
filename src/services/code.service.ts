@@ -7,7 +7,6 @@ class CodeService {
   async getCodeDetails(chainId: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
     const codeDetails = await CodeModel.findOne({ code_id: codeId, chain_id: chainId }, { definition: 0 });
     if (codeDetails) return codeDetails;
-
     await this.createCodeDetails(chainId, codeId);
     return await this.getCodeDetails(chainId, codeId);
   }
@@ -22,10 +21,10 @@ class CodeService {
 
     const schemaDefinition = await this.createPartialSchema(chainId, contracts[0]);
     await codeDetails.updateOne({ definition: schemaDefinition });
-    return await this.getCodeSchema(chainId, codeId);
+    return schemaDefinition;
   }
 
-  async createPartialSchema(chainId: string, address: string): Promise<unknown> {
+  async createPartialSchema(chainId: string, address: string): Promise<Record<string, unknown>> {
     const client = await CosmWasmClient.connectWithSigner(chainId);
     const execute = await client.getExecuteSchemaFromAddress(address);
     const query = await client.getQuerySchemaFromAddress(address);

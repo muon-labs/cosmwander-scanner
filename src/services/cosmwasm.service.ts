@@ -77,16 +77,9 @@ class CosmWasmClient {
       await this.client.queryContractSmart(address, { purposely_incorrect_msg: {} });
     } catch (e) {
       const { message } = e as { message: string };
-      if (!message.includes('expected one of')) return;
-      querySchema.oneOf = message
-        .split('expected one of ')[1]
-        .split(': query wasm contract failed')[0]
-        .split(', ')
-        .map((msgType: string) => ({
-          type: 'object',
-          required: [msgType.replace(/`/g, '')],
-          properties: {}
-        }));
+      if (!message.includes('expected')) return {};
+      const messages = [...message.matchAll(/(?<=`)[^`]+(?=`(?:[^`]*`[^`]*`)*[^`]*$)/g)].slice(1);
+      querySchema.oneOf = messages.map(([message]) => ({ type: 'object', required: [message], properties: {} }));
     }
     return querySchema;
   }
@@ -106,16 +99,9 @@ class CosmWasmClient {
       await client.execute(userAddress, address, { purposely_incorrect_msg: {} }, 'auto');
     } catch (e) {
       const { message } = e as { message: string };
-      if (!message.includes('expected one of')) return;
-      executeSchema.oneOf = message
-        .split('expected one of ')[1]
-        .split(': execute wasm contract failed')[0]
-        .split(', ')
-        .map((msgType: string) => ({
-          type: 'object',
-          required: [msgType.replace(/`/g, '')],
-          properties: {}
-        }));
+      if (!message.includes('expected')) return {};
+      const messages = [...message.matchAll(/(?<=`)[^`]+(?=`(?:[^`]*`[^`]*`)*[^`]*$)/g)].slice(1);
+      executeSchema.oneOf = messages.map(([message]) => ({ type: 'object', required: [message], properties: {} }));
     }
     return executeSchema;
   }
