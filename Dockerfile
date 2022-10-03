@@ -3,12 +3,12 @@ FROM node:18-alpine as builder
 
 # Install dependencies
 COPY ./package.json .
-COPY ./yarn.lock .
-RUN yarn install --frozen-lockfile
+COPY ./package-lock.json .
+RUN npm install 
 
 # Copy project
 COPY . .
-RUN yarn build
+RUN npm run build
 
 # -------- END builder --------
 FROM cimg/rust:1.45-node
@@ -16,14 +16,14 @@ FROM cimg/rust:1.45-node
 # Copy files
 WORKDIR /app
 COPY --from=builder /dist /app
-COPY --from=builder /yarn.lock /app
+COPY --from=builder /package-lock.json /app
 COPY --from=builder /package.json /app
 
 # Dependencies
-RUN yarn install --frozen-lockfile
+RUN npm install
 
 # Execute
-CMD yarn start:prod
+CMD npm run start:prod
 
 # Port exposing
 EXPOSE 3000
