@@ -1,12 +1,11 @@
-import { Document } from 'mongoose';
 import { ChainModel } from '~/models/chain.model';
 import { HttpError } from '~/utils/http-error';
 import { CodeModel, Code } from '../models';
 import CosmWasmClient from './cosmwasm.service';
 
 class CodeService {
-  async getCodeDetails(chainId: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
-    const codeDetails = await CodeModel.findOne({ code_id: codeId, chain_id: chainId }, { definition: 0 });
+  async getCodeDetails(chainId: string, codeId: number): Promise<any> {
+    const codeDetails = await CodeModel.findOne({ code_id: codeId, chain_id: chainId });
     if (codeDetails) return codeDetails;
     await this.createCodeDetails(chainId, codeId);
     return await this.getCodeDetails(chainId, codeId);
