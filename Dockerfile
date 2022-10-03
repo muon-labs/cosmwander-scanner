@@ -11,7 +11,13 @@ COPY . .
 RUN npm run build
 
 # -------- END builder --------
-FROM cimg/rust:1.45-node
+FROM node:18-alpine 
+
+# Install Rust, Cargo and Git
+RUN apk update && \
+apk upgrade && \
+apk add rust cargo && \
+apk add git
 
 # Copy files
 WORKDIR /app
