@@ -24,7 +24,7 @@ class ContractService {
   async createContractDetails(chainId: string, address: string): Promise<void> {
     const client = await CosmWasmClient.connect(chainId);
     const { codeId: code_id, creator, admin, label, ibcPortId } = await client.getContractDetails(address);
-    const contract = new ContractModel({ code_id, chain_id: chainId, creator, admin, label, ibcPortId });
+    const contract = new ContractModel({ address, code_id, chain_id: chainId, creator, admin, label, ibcPortId });
     await contract.save();
   }
 }
