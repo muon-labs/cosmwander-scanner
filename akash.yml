@@ -1,0 +1,39 @@
+---
+    version: '2.0'
+    services:
+      cosmwander:
+        image: 'muonlab/cosmwander:2'
+        expose:
+          - port: 3000
+            as: 80
+            accept:
+              - api.cosmwander.xyz
+            to:
+              - global: true
+        env:
+          -'url=https://api.cosmwander.xyz'
+          - DB_URI=
+          - PORT=3000
+          - MNEMONIC=
+    profiles:
+      compute:
+        cosmwander:
+          resources:
+            cpu:
+              units: 1
+            memory:
+              size: 1Gi
+            storage:
+              - size: 1Gi
+      placement:
+        dcloud:
+          pricing:
+            cosmwander:
+              denom: uakt
+              amount: 1000
+    deployment:
+      cosmwander:
+        dcloud:
+          profile: cosmwander
+          count: 1
+    
