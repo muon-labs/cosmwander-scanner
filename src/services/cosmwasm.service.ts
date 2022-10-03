@@ -77,25 +77,12 @@ class CosmWasmClient {
     return await this.client.getContract(address);
   }
 
-  async getQuerySchemaFromAddress(address: string) {
-    const querySchema = {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      title: 'QueryMsg',
-      oneOf: [] as Record<string, unknown>[]
-    };
-    try {
-      await this.client.queryContractSmart(address, { purposely_incorrect_msg: {} });
-    } catch (e) {
-      const { message } = e as { message: string };
-      if (!message.includes('expected')) return {};
-      const messages = [...message.matchAll(/(?<=`)[^`]+(?=`(?:[^`]*`[^`]*`)*[^`]*$)/g)].slice(1);
-      querySchema.oneOf = messages.map(([message]) => ({ type: 'object', required: [message], properties: {} }));
-    }
-    return querySchema;
-  }
-
   async simulate(address: string, encodeMsg: MsgExecuteContractEncodeObject | MsgInstantiateContractEncodeObject) {
     return await this.client.simulate(address, [encodeMsg], undefined);
+  }
+
+  async query(address: string, msg: Record<string, unknown>): Promise<any> {
+    return await this.client.queryContractSmart(address, msg);
   }
 }
 

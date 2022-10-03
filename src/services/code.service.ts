@@ -5,6 +5,7 @@ import { CodeModel, Code } from '../models';
 import CosmWasmClient from './cosmwasm.service';
 import ExecuteSchemaService from './execute-schema.service';
 import InstantiateSchemaService from './instantiate-schema.service';
+import QuerySchemaService from './query-schema.service';
 
 class CodeService {
   async getCodeDetails(chainId: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
@@ -34,9 +35,8 @@ class CodeService {
   }
 
   async createPartialSchema(chainId: string, codeId: number, address: string): Promise<Record<string, unknown>> {
-    const client = await CosmWasmClient.connectWithSigner(chainId);
+    const query = await QuerySchemaService.getQuerySchema(chainId, address);
     const execute = await ExecuteSchemaService.getExecuteSchema(chainId, address);
-    const query = await client.getQuerySchemaFromAddress(address);
     const instantiate = await InstantiateSchemaService.getInstantiateSchemaFromCodeId(chainId, codeId);
 
     return {
