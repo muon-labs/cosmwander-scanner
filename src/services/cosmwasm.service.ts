@@ -1,14 +1,12 @@
 import ChainService, { Chain } from './chain.service';
 import { CosmWasmClient as CWClient, SigningCosmWasmClient, CodeDetails, Contract } from '@cosmjs/cosmwasm-stargate';
 import { MsgExecuteContractEncodeObject, MsgInstantiateContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
-import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import { GasPrice } from '@cosmjs/stargate';
 import { OfflineSigner } from '@cosmjs/proto-signing';
 import { HttpError } from '~/utils/http-error';
 import GithubService from './github.service';
 import BuilderService from './builder.service';
-import { toUtf8 } from '@cosmjs/encoding';
 import { existsSync, mkdirSync } from 'fs';
 import path from 'path';
 
@@ -94,39 +92,6 @@ class CosmWasmClient {
       querySchema.oneOf = messages.map(([message]) => ({ type: 'object', required: [message], properties: {} }));
     }
     return querySchema;
-  }
-
-  async getExecuteSchemaFromAddress(address: string) {
-    const executeSchema = {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      title: 'ExecuteMsg',
-      oneOf: [] as Record<string, unknown>[]
-    };
-
-    const client = this.client as SigningCosmWasmClient;
-    // @ts-ignore
-    const signer = client.signer as OfflineSigner;
-    const [{ address: userAddress }] = await signer.getAccounts();
-
-    const encodeMsg: MsgExecuteContractEncodeObject = {
-      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-      value: MsgExecuteContract.fromPartial({
-        msg: toUtf8(JSON.stringify({ wasm: { execute: { purposely_incorrect_msg: {} } } })),
-        sender: userAddress,
-        contract: address,
-        funds: []
-      })
-    };
-
-    try {
-      await client.simulate(userAddress, [encodeMsg], undefined);
-    } catch (e) {
-      const { message } = e as { message: string };
-      if (!message.includes('expected')) return {};
-      const messages = [...message.matchAll(/(?<=`)[^`]+(?=`(?:[^`]*`[^`]*`)*[^`]*$)/g)].slice(1);
-      executeSchema.oneOf = messages.map(([message]) => ({ type: 'object', required: [message], properties: {} }));
-    }
-    return executeSchema;
   }
 
   async simulate(address: string, encodeMsg: MsgExecuteContractEncodeObject | MsgInstantiateContractEncodeObject) {

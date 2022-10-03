@@ -3,6 +3,7 @@ import { ChainModel } from '~/models/chain.model';
 import { HttpError } from '~/utils/http-error';
 import { CodeModel, Code } from '../models';
 import CosmWasmClient from './cosmwasm.service';
+import ExecuteSchemaService from './execute-schema.service';
 import InstantiateSchemaService from './instantiate-schema.service';
 
 class CodeService {
@@ -34,7 +35,7 @@ class CodeService {
 
   async createPartialSchema(chainId: string, codeId: number, address: string): Promise<Record<string, unknown>> {
     const client = await CosmWasmClient.connectWithSigner(chainId);
-    const execute = await client.getExecuteSchemaFromAddress(address);
+    const execute = await ExecuteSchemaService.getExecuteSchema(chainId, address);
     const query = await client.getQuerySchemaFromAddress(address);
     const instantiate = await InstantiateSchemaService.getInstantiateSchemaFromCodeId(chainId, codeId);
 
