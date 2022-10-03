@@ -1,10 +1,12 @@
+import { Document } from 'mongoose';
 import { ChainModel } from '~/models/chain.model';
 import { HttpError } from '~/utils/http-error';
 import { CodeModel, Code } from '../models';
 import CosmWasmClient from './cosmwasm.service';
+import InstantiateSchemaService from './instantiate-schema.service';
 
 class CodeService {
-  async getCodeDetails(chainId: string, codeId: number): Promise<any> {
+  async getCodeDetails(chainId: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
     const codeDetails = await CodeModel.findOne({ code_id: codeId, chain_id: chainId });
     if (codeDetails) return codeDetails;
     await this.createCodeDetails(chainId, codeId);
@@ -34,7 +36,8 @@ class CodeService {
     const client = await CosmWasmClient.connectWithSigner(chainId);
     const execute = await client.getExecuteSchemaFromAddress(address);
     const query = await client.getQuerySchemaFromAddress(address);
-    const instantiate = await client.getInstantiateSchemaFromCodeId(codeId);
+    const instantiate = await InstantiateSchemaService.getInstantiateSchemaFromCodeId(chainId, codeId);
+
     return {
       execute,
       query,
