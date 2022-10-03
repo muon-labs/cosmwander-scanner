@@ -13,6 +13,8 @@ import { tmpdir } from 'os';
 import { isExecutedError, isPropertyError, isTypeError } from '~/utils/error-types';
 import { sleep } from '~/utils/sleep';
 import toJsonSchema from 'to-json-schema';
+import { mkdtempSync } from 'fs';
+import path from 'path';
 
 class CosmWasmClient {
   chainService: ChainService;
@@ -52,7 +54,7 @@ class CosmWasmClient {
   }
 
   static buildSchemaFromRepo(code_ref: { repoUrl: string; commitHash: string; repoPath: string }) {
-    const cwd = tmpdir();
+    const cwd = mkdtempSync(path.join(tmpdir()));
     GithubService.verifyRepo(code_ref.repoUrl);
     GithubService.cloneRepo(cwd, code_ref);
     BuilderService.buildRepo(cwd, code_ref.repoPath);

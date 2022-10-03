@@ -11,10 +11,10 @@ class BuilderService {
   static getSchema(cwd: string, repoPath: string): Record<string, unknown> {
     const schemaPath = path.join(cwd, 'cw', repoPath, 'schema');
     const files = readdirSync(schemaPath);
-    if (!['instantiate_msg', 'execute_msg', 'query_msg'].every((nameFile) => files.includes(nameFile))) throw new HttpError(501);
-    const instantiateMsg = require(path.join(schemaPath, 'instantiate_msg'));
-    const executeMsg = require(path.join(schemaPath, 'execute_msg'));
-    const queryMsg = require(path.join(schemaPath, 'query_msg'));
+    if (!['instantiate_msg.json', 'execute_msg.json', 'query_msg.json'].every((nameFile) => files.includes(nameFile))) throw new HttpError(501);
+    const instantiateMsg = require(path.join(schemaPath, 'instantiate_msg.json'));
+    const executeMsg = require(path.join(schemaPath, 'execute_msg.json'));
+    const queryMsg = require(path.join(schemaPath, 'query_msg.json'));
     return { instantiateMsg, executeMsg, queryMsg };
   }
 }

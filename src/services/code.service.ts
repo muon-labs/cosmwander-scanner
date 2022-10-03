@@ -48,13 +48,14 @@ class CodeService {
     code_id: number,
     github_ref: { repoUrl: string; commitHash: string; repoPath: string }
   ): Promise<void> {
-    const definition = CosmWasmClient.buildSchemaFromRepo(github_ref);
+    const { instantiateMsg, executeMsg, queryMsg } = CosmWasmClient.buildSchemaFromRepo(github_ref);
     const code_ref = {
       repo_url: github_ref.repoUrl,
       commit_hash: github_ref.commitHash,
       repo_path: github_ref.repoPath
     };
-    await CodeModel.updateOne({ code_id, chain_id, code_ref }, { definition });
+    const definition = { instantiate: instantiateMsg, execute: executeMsg, query: queryMsg };
+    await CodeModel.updateOne({ code_id, chain_id }, { definition, code_ref });
   }
 
   async createCodeDetails(chainId: string, codeId: number): Promise<void> {
