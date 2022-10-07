@@ -1,6 +1,6 @@
 {
   "name": "@muon/cosmwander",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "scripts": {
     "start": "nodemon",
     "start:prod": "node src/server.js",
@@ -30,6 +30,7 @@
     "helmet": "^6.0.0",
     "jsonschema": "^1.4.1",
     "mongoose": "^6.6.3",
+    "node-cache": "^5.1.2",
     "nodemon": "^2.0.20",
     "pino": "^8.6.1",
     "pino-pretty": "^9.1.0",

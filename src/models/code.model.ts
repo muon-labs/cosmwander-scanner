@@ -5,10 +5,15 @@ export interface Code {
   creator: string;
   checksum: string;
   contracts: string[];
-  definition?: {
-    instantiate?: Record<string, string>;
-    execute?: Record<string, string>;
-    query?: Record<string, string>;
+  partial_schema?: {
+    instantiate: Record<string, string>;
+    execute: Record<string, string>;
+    query: Record<string, string>;
+  };
+  full_schema?: {
+    instantiate: Record<string, string>;
+    execute: Record<string, string>;
+    query: Record<string, string>;
   };
   code_ref?: {
     repo_url: string;
@@ -37,7 +42,12 @@ const CodeSchema = new Schema(
       type: String
     },
     contracts: [String],
-    definition: {
+    partial_schema: {
+      instantiate: {},
+      execute: {},
+      query: {}
+    },
+    full_schema: {
       instantiate: {},
       execute: {},
       query: {}

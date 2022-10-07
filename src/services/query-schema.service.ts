@@ -13,7 +13,7 @@ class QuerySchemaService {
     this.client = client;
     this.contract = contract;
   }
-  static async getQuerySchema(chainId: string, contract: string) {
+  static async getQueryFullPartialSchema(chainId: string, contract: string) {
     const client = await CosmWasmClient.connectWithSigner(chainId);
     const service = new QuerySchemaService(client, contract);
     const messages = await service.getQueryMessages();
@@ -31,10 +31,26 @@ class QuerySchemaService {
     const querySchema = {
       $schema: 'http://json-schema.org/draft-07/schema#',
       title: 'QueryMsg',
+      isPartial: false,
       isAborted: properties.some((property) => property.additionalProperties),
       anyOf: properties.length
         ? properties.map(({ additionalProperties, ...property }) => ({ ...toJsonSchema(property), additionalProperties }))
         : [{ ...toJsonSchema(messages) }]
+    };
+
+    return querySchema;
+  }
+
+  static async getQueryPartialSchema(chainId: string, contract: string) {
+    const client = await CosmWasmClient.connectWithSigner(chainId);
+    const service = new QuerySchemaService(client, contract);
+    const messages = await service.getQueryMessages();
+
+    const querySchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      title: 'QueryMsg',
+      isPartial: true,
+      anyOf: messages?.map(([message]) => ({ ...toJsonSchema({ [message]: null }) })) || []
     };
 
     return querySchema;

@@ -16,7 +16,7 @@ class ExecuteSchemaService {
     this.client = client;
     this.contract = contract;
   }
-  static async getExecuteSchema(chainId: string, contract: string) {
+  static async getExecuteFullPartialSchema(chainId: string, contract: string) {
     const client = await CosmWasmClient.connectWithSigner(chainId);
     const service = new ExecuteSchemaService(client, contract);
     const messages = await service.getExecuteMessages();
@@ -31,10 +31,26 @@ class ExecuteSchemaService {
     const executeSchema = {
       $schema: 'http://json-schema.org/draft-07/schema#',
       title: 'ExecuteMsg',
+      isPartial: false,
       isAborted: properties.some((property) => property.additionalProperties),
       anyOf: properties.length
         ? properties.map(({ additionalProperties, ...property }) => ({ ...toJsonSchema(property), additionalProperties }))
         : [{ ...toJsonSchema(messages) }]
+    };
+
+    return executeSchema;
+  }
+
+  static async getExecutePartialSchema(chainId: string, contract: string) {
+    const client = await CosmWasmClient.connectWithSigner(chainId);
+    const service = new ExecuteSchemaService(client, contract);
+    const messages = await service.getExecuteMessages();
+
+    const executeSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      title: 'ExecuteMsg',
+      isPartial: true,
+      anyOf: messages?.map(([message]) => ({ ...toJsonSchema({ [message]: null }) })) || []
     };
 
     return executeSchema;
