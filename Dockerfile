@@ -11,13 +11,10 @@ COPY . .
 RUN npm run build
 
 # -------- END builder --------
-FROM node:18-alpine 
+FROM rust:1.64-alpine3.16
 
 # Install Rust, Cargo and Git
-RUN apk update && \
-apk upgrade && \
-apk add rust cargo && \
-apk add git
+RUN apk add --update nodejs npm git
 
 # Copy files
 WORKDIR /app
