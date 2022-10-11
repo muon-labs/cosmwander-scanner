@@ -1,12 +1,14 @@
 import ChainService, { Chain } from './chain.service';
 import { CosmWasmClient as CWClient, SigningCosmWasmClient, CodeDetails, Contract } from '@cosmjs/cosmwasm-stargate';
 import { MsgExecuteContractEncodeObject, MsgInstantiateContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
-import { GasPrice } from '@cosmjs/stargate';
+import { DirectSecp256k1HdWallet, decodeTxRaw, Registry } from '@cosmjs/proto-signing';
+import { fromBase64, fromUtf8 } from '@cosmjs/encoding';
+import { defaultRegistryTypes, GasPrice } from '@cosmjs/stargate';
 import { OfflineSigner } from '@cosmjs/proto-signing';
 import { HttpError } from '~/utils/http-error';
 import GithubService from './github.service';
 import BuilderService from './builder.service';
+import { wasmTypes } from '~/utils/wasm-types';
 import { existsSync, mkdirSync } from 'fs';
 import path from 'path';
 
@@ -15,9 +17,11 @@ class CosmWasmClient {
   githubService: GithubService;
   chain: Chain;
   client: SigningCosmWasmClient;
+  registry: Registry;
   constructor(client: SigningCosmWasmClient, chainService: ChainService, chainId: string) {
     this.chainService = chainService;
     this.githubService = new GithubService();
+    this.registry = new Registry([...defaultRegistryTypes, ...wasmTypes]);
     this.chain = this.chainService.getChainById(chainId);
     this.client = client;
   }
@@ -65,6 +69,14 @@ class CosmWasmClient {
     return schema;
   }
 
+  async getInstantiateMsg(address: string) {
+    const response = await this.fetch<{ result: { txs: [{ tx: string }] } }>(`/tx_search?query="instantiate._contract_address='${address}'"`);
+    const [tx] = await this.decodeTxs(response.result.txs);
+    console.log(tx);
+    const [initMsg] = tx;
+    return initMsg;
+  }
+
   async getContractsByCodeId(codeId: number): Promise<readonly string[]> {
     return await this.client.getContracts(codeId);
   }
@@ -83,6 +95,28 @@ class CosmWasmClient {
 
   async query(address: string, msg: Record<string, unknown>): Promise<any> {
     return await this.client.queryContractSmart(address, msg);
+  }
+
+  async fetch<T>(url: string, config?: RequestInit): Promise<T> {
+    const baseURL = this.chainService.getBestRPC(this.chain.chain_id);
+
+    const response = await fetch(`${baseURL}${url}`, config);
+    return await response.json();
+  }
+
+  decodeTxs(txs: { tx: string }[]): unknown[][] {
+    const parsedTxs = txs.map(({ tx }) => this.parseTx(tx));
+
+    return parsedTxs;
+  }
+
+  parseTx(tx: string): unknown[] {
+    const decoded = decodeTxRaw(fromBase64(tx));
+
+    return decoded.body.messages.map((message) => {
+      const { msg } = this.registry.decode(message);
+      return JSON.parse(fromUtf8(msg));
+    });
   }
 }
 
