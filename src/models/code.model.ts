@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 
 export interface Code {
   code_id: number;
+  chain_id: string;
   creator: string;
   checksum: string;
   contracts: string[];

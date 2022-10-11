@@ -1,23 +1,27 @@
 import { ContractModel, Contract } from '../models';
+import ChainService from './chain.service';
 import CodeService from './code.service';
 import CosmWasmClient from './cosmwasm.service';
 
 class ContractService {
   codeService: CodeService;
+  chainService: ChainService;
   constructor() {
     this.codeService = new CodeService();
+    this.chainService = new ChainService();
   }
 
-  async getContractDetails(chainId: string, address: string): Promise<Contract> {
-    const contractDetails = await ContractModel.findOne({ address, chain_id: chainId });
+  async getContractDetails(chainName: string, address: string): Promise<Contract> {
+    const { chain_id } = this.chainService.getChainByName(chainName);
+    const contractDetails = await ContractModel.findOne({ address, chain_id });
     if (contractDetails) return contractDetails;
-    await this.createContractDetails(chainId, address);
-    return await this.getContractDetails(chainId, address);
+    await this.createContractDetails(chain_id, address);
+    return await this.getContractDetails(chainName, address);
   }
 
-  async getContractSchema(chainId: string, address: string): Promise<unknown> {
-    const contract = await this.getContractDetails(chainId, address);
-    const codeSchema = await this.codeService.getCodeSchema(chainId, contract.code_id);
+  async getContractSchema(chainName: string, address: string): Promise<unknown> {
+    const contract = await this.getContractDetails(chainName, address);
+    const codeSchema = await this.codeService.getCodeSchema(chainName, contract.code_id);
     return codeSchema.definition;
   }
 

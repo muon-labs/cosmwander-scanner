@@ -3,6 +3,7 @@ import { ChainModel } from '~/models/chain.model';
 import { HttpError } from '~/utils/http-error';
 import { CodeModel, Code } from '../models';
 import CacheService from './cache.service';
+import ChainService from './chain.service';
 import CosmWasmClient from './cosmwasm.service';
 import ExecuteSchemaService from './execute-schema.service';
 import InstantiateSchemaService from './instantiate-schema.service';
@@ -10,31 +11,36 @@ import QuerySchemaService from './query-schema.service';
 
 class CodeService {
   cacheService: CacheService;
+  chainService: ChainService;
   constructor() {
     this.cacheService = new CacheService();
+    this.chainService = new ChainService();
   }
 
-  async getCodeDetails(chainId: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
-    const codeDetails = await CodeModel.findOne({ code_id: codeId, chain_id: chainId });
+  async getCodeDetails(chainName: string, codeId: number): Promise<Document<unknown, unknown, Code> & Code> {
+    const { chain_id } = this.chainService.getChainByName(chainName);
+    const codeDetails = await CodeModel.findOne({ code_id: codeId, chain_id: chain_id });
     if (codeDetails) return codeDetails;
-    await this.createCodeDetails(chainId, codeId);
-    return await this.getCodeDetails(chainId, codeId);
+    await this.createCodeDetails(chain_id, codeId);
+    return await this.getCodeDetails(chainName, codeId);
   }
 
-  async getCodeSchema(chainId: string, codeId: number): Promise<Record<string, unknown>> {
-    const codeDetails = await this.getCodeDetails(chainId, codeId);
+  async getCodeSchema(chainName: string, codeId: number): Promise<Record<string, unknown>> {
+    const { chain_id } = this.chainService.getChainByName(chainName);
+    const codeDetails = await this.getCodeDetails(chainName, codeId);
 
     const { partial_schema, full_schema, contracts } = codeDetails;
 
     if (partial_schema?.execute) return { full_schema, partial_schema };
     if (!contracts.length) return {};
 
-    const schema = await this.createPartialSchema(chainId, codeId, contracts[0]);
+    const schema = await this.createPartialSchema(chain_id, codeId, contracts[0]);
     await codeDetails.updateOne({ partial_schema: schema });
     return schema;
   }
 
-  async getPinnedCode(chain_id: string): Promise<number[]> {
+  async getPinnedCode(chainName: string): Promise<number[]> {
+    const { chain_id } = this.chainService.getChainByName(chainName);
     const chainInfo = await ChainModel.findOne({ chain_id });
     if (!chainInfo) throw new HttpError(404);
     return chainInfo.pinned_codes;
