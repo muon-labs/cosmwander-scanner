@@ -7,7 +7,7 @@ export const controllers = async (app: Application): Promise<void> => {
   await Promise.all(
     files.map(async (fileName: string) => {
       const { default: file } = await import(join(process.cwd(), 'src/controllers', fileName));
-      app.use('/api' + file.prefixPath, ...file.middlewares, file.controller);
+      app.use(file.prefixPath, ...file.middlewares, file.controller);
     })
   );
 };

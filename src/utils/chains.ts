@@ -92,14 +92,14 @@ export const chains = [
     apis: {
       rpc: [
         {
-          address: 'https://rpc.osmosis.zone/',
-          provider: 'Osmosis Foundation'
+          address: 'https://osmosis-rpc.polkachu.com',
+          provider: 'Polkachu'
         }
       ],
       rest: [
         {
-          address: 'https://lcd.osmosis.zone/',
-          provider: 'Osmosis Foundation'
+          address: 'https://osmosis-api.polkachu.com',
+          provider: 'Polkachu'
         }
       ],
       grpc: [
@@ -275,75 +275,6 @@ export const chains = [
       cosmwasm_version: '0.27',
       cosmwasm_enabled: true
     },
-    peers: {
-      seeds: [
-        {
-          id: '2484353dab0b2c1275765b8ffa2c50b3b36158ca',
-          address: 'seed-node.junochain.com:26656'
-        },
-        {
-          id: '90b09362d9ce3845096c4938eea0dba682b0ad2c',
-          address: 'juno-seed-new.blockpane.com:26656'
-        },
-        {
-          id: '22ee6e65e5e79cd0b970dd11e52761de8d1d6dfd',
-          address: 'seeds.pupmos.network:2001',
-          provider: 'PUPMØS'
-        },
-        {
-          id: 'ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0',
-          address: 'seeds.polkachu.com:12656',
-          provider: 'Polkachu'
-        },
-        {
-          id: '20e1000e88125698264454a884812746c2eb4807',
-          address: 'seeds.lavenderfive.com:12656',
-          provider: 'Lavender.Five Nodes 🐝'
-        }
-      ],
-      persistent_peers: [
-        {
-          id: 'b1f46f1a1955fc773d3b73180179b0e0a07adce1',
-          address: '162.55.244.250:39656'
-        },
-        {
-          id: '7f593757c0cde8972ce929381d8ac8e446837811',
-          address: '178.18.255.244:26656'
-        },
-        {
-          id: '7b22dfc605989d66b89d2dfe118d799ea5abc2f0',
-          address: '167.99.210.65:26656'
-        },
-        {
-          id: '4bd9cac019775047d27f9b9cea66b25270ab497d',
-          address: '137.184.7.164:26656'
-        },
-        {
-          id: 'bd822a8057902fbc80fd9135e335f0dfefa32342',
-          address: '65.21.202.159:38656'
-        },
-        {
-          id: '15827c6c13f919e4d9c11bcca23dff4e3e79b1b8',
-          address: '51.38.52.210:38656'
-        },
-        {
-          id: 'e665df28999b2b7b40cff2fe4030682c380bf294',
-          address: '188.40.106.109:38656'
-        },
-        {
-          id: '92804ce50c85ff4c7cf149d347dd880fc3735bf4',
-          address: '34.94.231.154:26656'
-        },
-        {
-          id: '795ed214b8354e8468f46d1bbbf6e128a88fe3bd',
-          address: '34.127.19.222:26656'
-        },
-        {
-          id: 'ea9c1ac0e91639b2c7957d9604655e2263abe4e1',
-          address: '185.181.103.136:26656'
-        }
-      ]
-    },
     apis: {
       rpc: [
         {
@@ -463,6 +394,100 @@ export const chains = [
         kind: 'NodesGuru',
         url: 'https://testnet.juno.explorers.guru/',
         tx_page: 'https://testnet.juno.explorers.guru/transaction/${txHash}'
+      }
+    ]
+  },
+  {
+    $schema: '../chain.schema.json',
+    chain_name: 'stargaze',
+    status: 'live',
+    network_type: 'mainnet',
+    website: 'https://stargaze.zone/',
+    pretty_name: 'Stargaze',
+    chain_id: 'stargaze-1',
+    bech32_prefix: 'stars',
+    daemon_name: 'starsd',
+    node_home: '$HOME/.starsd',
+    slip44: 118,
+    genesis: {
+      genesis_url: 'https://raw.githubusercontent.com/public-awesome/mainnet/main/stargaze-1/genesis.tar.gz'
+    },
+    codebase: {
+      git_repo: 'https://github.com/public-awesome/stargaze',
+      recommended_version: 'v7.0.0',
+      compatible_versions: ['v7.0.0']
+    },
+    apis: {
+      rpc: [
+        {
+          address: 'https://stargaze-rpc.polkachu.com',
+          provider: 'Polkachu'
+        }
+      ],
+      rest: [
+        {
+          address: 'https://rest.stargaze-apis.com/',
+          provider: 'Stargaze Foundation'
+        },
+        {
+          address: 'https://api.stargaze.pupmos.network/',
+          provider: 'PUPMØS'
+        },
+        {
+          address: 'https://api.stargaze.ezstaking.io/',
+          provider: 'EZStaking.io'
+        },
+        {
+          address: 'https://api.stars.kingnodes.com/',
+          provider: 'kingnodes'
+        },
+        {
+          address: 'https://api-stargaze-ia.cosmosia.notional.ventures/',
+          provider: 'Notional'
+        },
+        {
+          address: 'https://stargaze.c29r3.xyz:443/api/',
+          provider: 'c29r3'
+        },
+        {
+          address: 'https://stargaze-rapipc.polkachu.com',
+          provider: 'Polkachu'
+        },
+        {
+          address: 'https://api.stargaze.nodestake.top',
+          provider: 'NodeStake'
+        }
+      ],
+      grpc: [
+        {
+          address: 'grpc-stargaze-ia.cosmosia.notional.ventures:443',
+          provider: 'Notional'
+        },
+        {
+          address: 'stargaze-grpc.polkachu.com:13790',
+          provider: 'Polkachu'
+        },
+        {
+          address: 'https://grpc.stargaze.nodestake.top',
+          provider: 'NodeStake'
+        }
+      ]
+    },
+    explorers: [
+      {
+        kind: 'mintscan',
+        url: 'https://www.mintscan.io/stargaze/',
+        tx_page: 'https://www.mintscan.io/stargaze/txs/${txHash}'
+      },
+      {
+        kind: 'ping-pub',
+        url: 'https://ping.pub/stargaze',
+        tx_page: 'https://ping.pub/stargaze/tx/${txHash}'
+      },
+      {
+        kind: 'atomscan',
+        url: 'https://atomscan.com/stargaze',
+        tx_page: 'https://atomscan.com/stargaze/transactions/${txHash}'
       }
     ]
   }

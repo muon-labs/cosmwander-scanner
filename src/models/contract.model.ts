@@ -16,6 +16,7 @@ const ContractSchema = new Schema(
       required: true,
       type: Number
     },
+    tx_hash: String,
     address: {
       required: true,
       type: String

@@ -70,11 +70,14 @@ class CosmWasmClient {
   }
 
   async getInstantiateMsg(address: string) {
-    const response = await this.fetch<{ result: { txs: [{ tx: string }] } }>(`/tx_search?query="instantiate._contract_address='${address}'"`);
-    const [tx] = await this.decodeTxs(response.result.txs);
-    console.log(tx);
-    const [initMsg] = tx;
-    return initMsg;
+    const { result } = await this.fetch<{ result: { txs: [{ tx: string; hash: string }] } }>(
+      `/tx_search?query="instantiate._contract_address='${address}'"`
+    );
+
+    if (!result.txs.length) return {};
+    const [tx] = await this.decodeTxs(result.txs);
+
+    return { msg: tx.tx, hash: tx.hash };
   }
 
   async getContractsByCodeId(codeId: number): Promise<readonly string[]> {
@@ -104,8 +107,8 @@ class CosmWasmClient {
     return await response.json();
   }
 
-  decodeTxs(txs: { tx: string }[]): unknown[][] {
-    const parsedTxs = txs.map(({ tx }) => this.parseTx(tx));
+  decodeTxs(txs: { tx: string; hash: string }[]): { tx: unknown[]; hash: string }[] {
+    const parsedTxs = txs.map(({ tx, hash }) => ({ tx: this.parseTx(tx), hash }));
 
     return parsedTxs;
   }
