@@ -1,14 +1,14 @@
-import ChainService, { Chain } from './chain.service';
+import ChainService from './chain.service';
 import { CosmWasmClient as CWClient, SigningCosmWasmClient, CodeDetails, Contract } from '@cosmjs/cosmwasm-stargate';
 import { MsgExecuteContractEncodeObject, MsgInstantiateContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
 import { DirectSecp256k1HdWallet, decodeTxRaw, Registry } from '@cosmjs/proto-signing';
 import { fromBase64, fromUtf8 } from '@cosmjs/encoding';
 import { defaultRegistryTypes, GasPrice } from '@cosmjs/stargate';
 import { OfflineSigner } from '@cosmjs/proto-signing';
-import { HttpError } from '~/utils/http-error';
 import GithubService from './github.service';
 import BuilderService from './builder.service';
 import { wasmTypes } from '~/utils/wasm-types';
+import { Chain } from '~/utils/chains';
 import { existsSync, mkdirSync } from 'fs';
 import path from 'path';
 
@@ -43,11 +43,11 @@ class CosmWasmClient {
   static async connectWithSigner(chainId: string): Promise<CosmWasmClient> {
     const chainService = new ChainService();
     const chain = chainService.getChainById(chainId);
-    if (!chain.fees?.fee_tokens?.length) throw new HttpError(501);
-    const [{ denom }] = chain.fees?.fee_tokens;
-    const rpc = chainService.getBestRPC(chainId);
+
     const wallet = await CosmWasmClient.getWallet(chain.bech32_prefix);
-    const client = await SigningCosmWasmClient.connectWithSigner(rpc, wallet, { gasPrice: GasPrice.fromString(`${0.025}${denom}`) });
+    const client = await SigningCosmWasmClient.connectWithSigner(chain.rpc_url, wallet, {
+      gasPrice: GasPrice.fromString(`${0.025}${chain.default_fee_token}`)
+    });
     return new CosmWasmClient(client, chainService, chainId);
   }
 
