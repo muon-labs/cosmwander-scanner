@@ -36,7 +36,7 @@ class CodeService {
 
     const schema = await this.createPartialSchema(chain_id, codeId, contracts[0]);
     await codeDetails.updateOne({ partial_schema: schema });
-    return schema;
+    return { partial_schema: schema };
   }
 
   async getPinnedCode(chainName: string): Promise<number[]> {
