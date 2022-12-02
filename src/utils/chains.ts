@@ -152,6 +152,56 @@ export const chains = [
     }
   },
   {
+    chain_id: 'elfagar-1',
+    chain_name: 'stargazetestnet',
+    pretty_name: 'Stargaze Testnet',
+    bech32_prefix: 'stars',
+    rpc_url: 'https://rpc.elgafar-1.stargaze-apis.com',
+    rest_url: 'https://rest.elgafar-1.stargaze-apis.com',
+    bip44: {
+      coinType: 118
+    },
+    default_fee_token: 'ustars',
+    fee_tokens: [
+      {
+        denom: 'ustars',
+        coinDecimals: 6
+      }
+    ],
+    staking_token: 'ustars',
+    default_gas_price: 0.03,
+    gas_price_step: {
+      low: 0.03,
+      average: 0.04,
+      high: 0.05
+    }
+  },
+  {
+    chain_id: 'osmo-test-4',
+    chain_name: 'osmotestnet',
+    pretty_name: 'Osmosis Testnet',
+    bech32_prefix: 'osmo',
+    rpc_url: 'https://testnet-rpc.osmosis.zone',
+    rest_url: 'https://testnet-rest.osmosis.zone',
+    bip44: {
+      coinType: 118
+    },
+    default_fee_token: 'uosmo',
+    fee_tokens: [
+      {
+        denom: 'uosmo',
+        coinDecimals: 6
+      }
+    ],
+    staking_token: 'uosmo',
+    default_gas_price: 0.025,
+    gas_price_step: {
+      low: 0,
+      average: 0.025,
+      high: 0.04
+    }
+  },
+  {
     chain_id: 'uni-5',
     chain_name: 'junotestnet',
     pretty_name: 'Juno Testnet',

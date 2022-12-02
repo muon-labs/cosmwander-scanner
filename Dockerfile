@@ -14,7 +14,7 @@ RUN npm run build
 FROM rust:1.64-alpine3.16
 
 # Install Rust, Cargo and Git
-RUN apk add --update nodejs npm git
+RUN apk add --update nodejs-current npm git
 
 # Copy files
 WORKDIR /app
