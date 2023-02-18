@@ -1,16 +1,7 @@
 import { Schema, model } from 'mongoose';
+import Contract from '~/interfaces/contract';
 
-export interface Contract {
-  code_id: number;
-  chain_id: string;
-  init_msg: Record<string, unknown>;
-  creator: string;
-  label: string;
-  ibcPortId?: string;
-  migrations?: Record<string, string>;
-}
-
-const ContractSchema = new Schema(
+const ContractSchema: Schema = new Schema(
   {
     code_id: {
       required: true,
@@ -34,8 +25,7 @@ const ContractSchema = new Schema(
       required: true,
       type: String
     },
-    migrations: {},
-    ibcPortId: String
+    migrations: {}
   },
   {
     timestamps: true,
@@ -46,4 +36,4 @@ const ContractSchema = new Schema(
   }
 );
 
-export const ContractModel = model<typeof ContractSchema>('Contract', ContractSchema);
+export const ContractModel = model<Contract>('Contract', ContractSchema);

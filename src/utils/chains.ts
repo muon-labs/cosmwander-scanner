@@ -27,31 +27,6 @@ export const chains = [
     }
   },
   {
-    chain_id: 'cosmoshub-4',
-    chain_name: 'cosmoshub',
-    pretty_name: 'Cosmos Hub',
-    bech32_prefix: 'cosmos',
-    rpc_url: 'https://rpc.cosmos.directory/cosmoshub',
-    rest_url: 'https://rest.cosmos.directory/cosmoshub',
-    bip44: {
-      coinType: 118
-    },
-    default_fee_token: 'uatom',
-    fee_tokens: [
-      {
-        denom: 'uatom',
-        coinDecimals: 6
-      }
-    ],
-    staking_token: 'uatom',
-    default_gas_price: 0.025,
-    gas_price_step: {
-      low: 0.01,
-      average: 0.025,
-      high: 0.04
-    }
-  },
-  {
     chain_id: 'osmosis-1',
     chain_name: 'osmosis',
     pretty_name: 'Osmosis',
@@ -69,31 +44,6 @@ export const chains = [
       }
     ],
     staking_token: 'uosmo',
-    default_gas_price: 0.025,
-    gas_price_step: {
-      low: 0.01,
-      average: 0.025,
-      high: 0.04
-    }
-  },
-  {
-    chain_id: 'akashnet-2',
-    chain_name: 'akash',
-    pretty_name: 'Akash',
-    bech32_prefix: 'akash',
-    rpc_url: 'https://rpc.cosmos.directory/akash',
-    rest_url: 'https://rest.cosmos.directory/akash',
-    bip44: {
-      coinType: 118
-    },
-    default_fee_token: 'uakt',
-    fee_tokens: [
-      {
-        denom: 'uakt',
-        coinDecimals: 6
-      }
-    ],
-    staking_token: 'uakt',
     default_gas_price: 0.025,
     gas_price_step: {
       low: 0.01,
@@ -127,31 +77,6 @@ export const chains = [
     }
   },
   {
-    chain_id: 'tgrade-mainnet-1',
-    chain_name: 'tgrade',
-    pretty_name: 'Tgrade',
-    bech32_prefix: 'tgrade',
-    rpc_url: 'https://rpc.cosmos.directory/tgrade',
-    rest_url: 'https://rest.cosmos.directory/tgrade',
-    bip44: {
-      coinType: 118
-    },
-    default_fee_token: 'utgd',
-    fee_tokens: [
-      {
-        denom: 'utgd',
-        coinDecimals: 6
-      }
-    ],
-    staking_token: 'utgd',
-    default_gas_price: 0.075,
-    gas_price_step: {
-      low: 0.05,
-      average: 0.075,
-      high: 0.1
-    }
-  },
-  {
     chain_id: 'elfagar-1',
     chain_name: 'stargazetestnet',
     pretty_name: 'Stargaze Testnet',
@@ -178,11 +103,11 @@ export const chains = [
   },
   {
     chain_id: 'osmo-test-4',
-    chain_name: 'osmotestnet',
+    chain_name: 'osmosistestnet',
     pretty_name: 'Osmosis Testnet',
     bech32_prefix: 'osmo',
-    rpc_url: 'https://testnet-rpc.osmosis.zone',
-    rest_url: 'https://testnet-rest.osmosis.zone',
+    rpc_url: 'https://rpc-test.osmosis.zone:443',
+    rest_url: 'https://api-test.osmosis.zone',
     bip44: {
       coinType: 118
     },
@@ -202,12 +127,12 @@ export const chains = [
     }
   },
   {
-    chain_id: 'uni-5',
+    chain_id: 'uni-6',
     chain_name: 'junotestnet',
     pretty_name: 'Juno Testnet',
     bech32_prefix: 'juno',
-    rpc_url: 'https://rpc.uni.juno.deuslabs.fi:443',
-    rest_url: 'https://lcd.uni.juno.deuslabs.fi',
+    rpc_url: 'https://uni-rpc.reece.sh/',
+    rest_url: 'https://uni-api.reece.sh/',
     bip44: {
       coinType: 118
     },

@@ -1,30 +1,7 @@
 import { Schema, model } from 'mongoose';
+import Code from '~/interfaces/code';
 
-export interface Code {
-  code_id: number;
-  chain_id: string;
-  creator: string;
-  checksum: string;
-  contracts: string[];
-  partial_schema?: {
-    instantiate: Record<string, string>;
-    execute: Record<string, string>;
-    query: Record<string, string>;
-  };
-  full_schema?: {
-    instantiate: Record<string, string>;
-    execute: Record<string, string>;
-    query: Record<string, string>;
-  };
-  code_ref?: {
-    repo_url: string;
-    commit_hash: string;
-  };
-  verified?: boolean;
-  last_verified?: Date;
-}
-
-const CodeSchema = new Schema(
+const CodeSchema: Schema = new Schema(
   {
     code_id: {
       required: true,
@@ -42,12 +19,9 @@ const CodeSchema = new Schema(
       required: true,
       type: String
     },
+    tx_hash: String,
+    uploaded_at: Date,
     contracts: [String],
-    partial_schema: {
-      instantiate: {},
-      execute: {},
-      query: {}
-    },
     full_schema: {
       instantiate: {},
       execute: {},
@@ -57,8 +31,8 @@ const CodeSchema = new Schema(
       repo_url: String,
       commit_hash: String
     },
-    verified: Boolean,
-    last_verified: Date
+    version: String,
+    verified: Boolean
   },
   {
     timestamps: true,

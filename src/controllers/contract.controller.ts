@@ -4,7 +4,7 @@ import ContractService from '../services/contract.service';
 const controller = Router();
 const contractService = new ContractService();
 
-controller.get('/:chainName/:address/schema', async (req: Request, res: Response, next: NextFunction) => {
+controller.get('/:chainName/contracts/:address', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { address, chainName } = req.params;
     const msg = await contractService.getContractSchema(chainName, address);
@@ -14,14 +14,15 @@ controller.get('/:chainName/:address/schema', async (req: Request, res: Response
   }
 });
 
-controller.get('/:chainName/:address/metadata', async (req: Request, res: Response, next: NextFunction) => {
+controller.post('/:chainName/contracts', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { address, chainName } = req.params;
-    const msg = await contractService.getContractDetails(chainName, address);
-    res.status(200).send(msg);
+    const { chainName } = req.params;
+    const { contracts } = req.body;
+    const msg = await contractService.getContractsDetails(chainName, contracts);
+    res.status(200).json(msg);
   } catch (error: unknown) {
     next(error);
   }
 });
 
-export default { prefixPath: '/contract', middlewares: [], controller };
+export default { prefixPath: '/', middlewares: [], controller };
