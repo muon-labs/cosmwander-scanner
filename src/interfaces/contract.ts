@@ -4,5 +4,6 @@ export default interface Contract {
   init_msg: Record<string, unknown>;
   creator: string;
   label: string;
+  deployed_name?: string;
   migrations?: Record<string, string>;
 }

@@ -5,7 +5,7 @@ import Contract from '../../src/interfaces/contract';
 import { CodeModel } from '../../src/models/code.model';
 import { ContractModel } from '../../src/models/contract.model';
 
-async function run_scan() {
+async function run_scan(rpcUrl: string, chainId: string) {
   console.log('Starting contract schema scan');
   let finder = await ContractSchemaFinder.getInstance(RPC_URL, CHAIN_ID);
 
@@ -20,13 +20,13 @@ async function run_scan() {
     for (let address of addresses) {
       let contract = await finder.getMetadataFromContract(address, code.id);
 
-      // console.log({ contract, hist: contract.contractHistory[0].msg });
       let contractInfo: Contract = {
         code_id: code.id,
         chain_id: CHAIN_ID,
         init_msg: contract.contractHistory[0].msg,
         creator: contract.contract.creator,
-        label: contract.contract.label
+        label: contract.contract.label,
+        deployed_name: contract.contractName
         // todo migrations
       };
 
@@ -50,6 +50,19 @@ async function run_scan() {
     let newCode = await CodeModel.create(codeInfo);
     await newCode.save();
   }
+
+  console.log('\n=============================');
+  console.log('Parsed ' + codes.length + ' codes and ' + codes.reduce((acc, code) => acc + code.contracts.length, 0) + ' contracts');
 }
 
-run_scan();
+run_scan(RPC_URL, CHAIN_ID);
+
+// // do all 6 chains at once:
+// let data = [
+//   { url: 'https://rpc.osmosis.zone', chainId: 'osmosis-1' },
+//   { url: 'https://rpc.testnet.osmosis.zone', chainId: 'osmo-test-4' }
+// ]; // add and verify above
+
+// for (let { url, chain_id } of data) {
+//   run_scan(url, chain_id);
+// }

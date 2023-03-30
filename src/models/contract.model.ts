@@ -25,6 +25,7 @@ const ContractSchema: Schema = new Schema(
       required: true,
       type: String
     },
+    deployed_name: String,
     migrations: {}
   },
   {

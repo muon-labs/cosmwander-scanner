@@ -42,8 +42,16 @@ export default class ContractSchemaFinder {
     let code = await this.queryClient!.getCodeDetails(code_id);
     let contractName = await this.queryClient!.queryContractRaw(address, Buffer.from('636F6E74726163745F696E666F', 'hex'));
 
+    let parsedName = '';
+    try {
+      let details = JSON.parse(new TextDecoder().decode(contractName || undefined));
+      parsedName = details.contract;
+    } catch (e) {
+      console.log('Error parsing contract name', e);
+    }
+
     return {
-      contractName: new TextDecoder().decode(contractName || undefined),
+      contractName: parsedName,
       contractAddress: address,
       contractCodeId: code_id,
       contractHistory: contractHistory,
