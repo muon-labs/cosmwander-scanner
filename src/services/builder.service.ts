@@ -8,6 +8,16 @@ class BuilderService {
     spawnSync('cargo', ['run --example schema'], { cwd: path.join(cwd, 'cw', repoPath) });
   }
 
+  static verifyRepo(repo: string): void {}
+  static cloneRepo(cwd: string, code_ref: { repoUrl: string; commitHash: string; repoPath: string }): void {
+    spawnSync('git', ['clone', code_ref.repoUrl, 'cw'], { cwd });
+    spawnSync('git', ['checkout', code_ref.commitHash], { cwd: path.join(cwd, 'cw') });
+  }
+
+  static deleteRepo(cwd: string) {
+    spawnSync('rm', ['-rf', 'cw'], { cwd });
+  }
+
   static getSchema(cwd: string, repoPath: string): Record<string, unknown> {
     const schemaPath = path.join(cwd, 'cw', repoPath, 'schema');
     const files = readdirSync(schemaPath);
@@ -21,6 +31,17 @@ class BuilderService {
     const executeMsg = require(path.join(schemaPath, 'execute_msg.json'));
     const queryMsg = require(path.join(schemaPath, 'query_msg.json'));
     return { instantiateMsg, executeMsg, queryMsg };
+  }
+
+  static buildSchemaFromRepo(code_ref: { repoUrl: string; commitHash: string; repoPath: string }) {
+    /* const cwd = path.join(process.cwd(), 'temp');
+    if (!existsSync(cwd)) mkdirSync(cwd);
+    GithubService.verifyRepo(code_ref.repoUrl);
+    GithubService.cloneRepo(cwd, code_ref);
+    BuilderService.buildRepo(cwd, code_ref.repoPath);
+    const schema = BuilderService.getSchema(cwd, code_ref.repoPath);
+    GithubService.deleteRepo(cwd);
+    return schema; */
   }
 }
 

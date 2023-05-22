@@ -1,20 +1,31 @@
-export default interface Code {
-  code_id: number;
-  chain_id: string;
+import { Document } from 'mongoose';
+
+export default interface Code extends Document {
+  codeId: number;
+  chainId: string;
   creator: string;
   checksum: string;
-  tx_hash: string;
-  uploaded_at: Date;
+  txHash: string;
   contracts: string[];
-  full_schema?: {
+  contractSchema?: {
     instantiate: Record<string, string>;
     execute: Record<string, string>;
     query: Record<string, string>;
   };
-  code_ref?: {
+  codeRef?: {
     repo_url: string;
     commit_hash: string;
   };
   version?: string;
   verified?: boolean;
+  createdAt: string;
+}
+
+export interface CodeDetails {
+  codeId: number;
+  creator: string;
+  checksum: string;
+  height: number;
+  txHash: string;
+  createdAt: string;
 }

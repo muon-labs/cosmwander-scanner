@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import CodeService from '../services/code.service';
+import CosmWanderService from '../services/cosmwander.sevice';
 
 const controller = Router();
-const codeService = new CodeService();
+const codeService = new CosmWanderService();
 
 controller.get('/:chainName/code/pinned', async (req: Request, res: Response, next: NextFunction) => {
   try {
