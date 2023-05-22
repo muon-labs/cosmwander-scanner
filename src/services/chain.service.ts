@@ -1,5 +1,8 @@
-import { chains, Chain } from '~/utils/chains';
+import { chains } from 'chain-registry';
 import { HttpError } from '~/utils/http-error';
+
+import type { Chain } from '@chain-registry/types';
+
 class ChainService {
   getChainById(chainId: string): Chain {
     const chain = chains.find((chain) => chain.chain_id === chainId);
@@ -11,11 +14,6 @@ class ChainService {
     const chain = chains.find((chain) => chain.chain_name === chainName);
     if (!chain) throw new HttpError(400);
     return chain;
-  }
-
-  getBestRPC(chainId: string): string {
-    const chain = this.getChainById(chainId);
-    return chain.rpc_url;
   }
 }
 

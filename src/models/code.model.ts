@@ -3,11 +3,11 @@ import Code from '~/interfaces/code';
 
 const CodeSchema: Schema = new Schema(
   {
-    code_id: {
+    codeId: {
       required: true,
       type: Number
     },
-    chain_id: {
+    chainId: {
       required: true,
       type: String
     },
@@ -19,23 +19,32 @@ const CodeSchema: Schema = new Schema(
       required: true,
       type: String
     },
-    tx_hash: String,
-    uploaded_at: Date,
-    contracts: [String],
-    full_schema: {
+    height: {
+      required: true,
+      type: Number
+    },
+    txHash: {
+      required: true,
+      type: String
+    },
+    createdAt: {
+      required: true,
+      type: Date
+    },
+    contractSchema: {
       instantiate: {},
       execute: {},
       query: {}
     },
-    code_ref: {
+    codeRef: {
       repo_url: String,
       commit_hash: String
     },
+    name: String,
     version: String,
     verified: Boolean
   },
   {
-    timestamps: true,
     versionKey: false,
     toJSON: {
       virtuals: true,

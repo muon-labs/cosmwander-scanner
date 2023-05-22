@@ -3,33 +3,36 @@ import Contract from '~/interfaces/contract';
 
 const ContractSchema: Schema = new Schema(
   {
-    code_id: {
+    codeId: {
       required: true,
       type: Number
     },
-    tx_hash: String,
+    height: {
+      required: true,
+      type: Number
+    },
+    txHash: {
+      required: true,
+      type: String
+    },
     address: {
       required: true,
       type: String
     },
-    chain_id: {
+    chainId: {
       required: true,
       type: String
     },
-    init_msg: {},
+    initMsg: {},
     creator: {
       required: true,
       type: String
     },
-    label: {
-      required: true,
-      type: String
-    },
-    deployed_name: String,
-    migrations: {}
+    name: String,
+    version: String,
+    createdAt: Date
   },
   {
-    timestamps: true,
     versionKey: false,
     toJSON: {
       virtuals: true
